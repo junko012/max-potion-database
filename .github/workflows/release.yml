@@ -1,0 +1,33 @@
+name: Release database
+
+# Se dispara al subir un tag db-vS.AAAA.MM.R (ver RELEASING.md). El tag debe coincidir con la versión
+# que declara la propia pokemon.db (Metadata + PRAGMA user_version); si no, el workflow falla.
+on:
+  push:
+    tags: ["db-v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - name: Validate (and match tag)
+        run: python scripts/validate_db.py database/pokemon.db --tag "${GITHUB_REF_NAME}"
+      - name: Package
+        run: |
+          mkdir dist
+          cp database/pokemon.db dist/pokemon.db
+          gzip -9 -k dist/pokemon.db
+          (cd dist && sha256sum pokemon.db > pokemon.db.sha256 && sha256sum pokemon.db.gz >> pokemon.db.sha256)
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "${GITHUB_REF_NAME}" dist/pokemon.db dist/pokemon.db.gz dist/pokemon.db.sha256 \
+            --title "pokemon.db ${GITHUB_REF_NAME#db-v}" \
+            --notes "See CHANGELOG.md. Schema ${GITHUB_REF_NAME#db-v} — apps pin the schema (first number); data versions inside the same schema are additive only."

@@ -1,0 +1,242 @@
+[
+  {
+    "category": "General",
+    "categoryId": "general",
+    "icon": "exportar",
+    "sample": "export",
+    "title": "Exportar escribe el archivo",
+    "text": "Mientras no exportes, los cambios viven solo en esta sesión: la barra inferior avisa «Cambios sin exportar». Al exportar se escribe el save real."
+  },
+  {
+    "category": "General",
+    "categoryId": "general",
+    "icon": "guardar",
+    "sample": "review",
+    "title": "Revisa antes de exportar",
+    "text": "El modal de revisión te deja incluir o excluir uno por uno cada Pokémon editado, el entrenador, la mochila y las liberaciones."
+  },
+  {
+    "category": "General",
+    "categoryId": "general",
+    "icon": "info",
+    "sample": "langs",
+    "title": "Dos idiomas independientes",
+    "text": "En Preferencias eliges «Idioma de la interfaz» y, aparte, «Idioma de los datos del juego» (especies, movimientos, objetos…). El indicador de la barra inferior muestra ambos."
+  },
+  {
+    "category": "General",
+    "categoryId": "general",
+    "icon": "teclado",
+    "sample": "keys",
+    "title": "F1 y atajos",
+    "text": "F1 abre esta guía. En Ayuda → «Atajos de teclado» está la lista completa: abrir, guardar, exportar, cerrar…"
+  },
+  {
+    "category": "Creación",
+    "categoryId": "creation",
+    "icon": "buscar",
+    "sample": "search",
+    "title": "Busca por nombre o número",
+    "text": "El selector de especie filtra mientras escribes, sin importar mayúsculas ni tildes."
+  },
+  {
+    "category": "Creación",
+    "categoryId": "creation",
+    "icon": "teclado",
+    "sample": "shift",
+    "title": "Salto rápido con el teclado",
+    "text": "Mantén Shift mientras usas las flechas para saltar el 10 % de los resultados de golpe. Inicio y Fin van a los extremos."
+  },
+  {
+    "category": "Creación",
+    "categoryId": "creation",
+    "icon": "pokemon",
+    "sample": "picker",
+    "title": "Solo se ofrecen especies del juego",
+    "text": "El selector oculta las especies que no existen en el juego del save o que no se pueden crear legales (por ejemplo, fuera del Pokédex de Hisui en Legends: Arceus, o de Galar y Paldea en Espada/Escudo y Escarlata/Púrpura)."
+  },
+  {
+    "category": "Creación",
+    "categoryId": "creation",
+    "icon": "advertencia",
+    "sample": "",
+    "title": "Formas y casos especiales",
+    "text": "Algunas formas no se pueden dejar legales al crearlas (como Zygarde 10 %/50 % o Ash-Greninja en Legends: Z-A) y no aparecen. Si una especie sale con alertas de legalidad, revisa el tab «Legal» y corrige de arriba abajo."
+  },
+  {
+    "category": "Edición",
+    "categoryId": "editing",
+    "icon": "grafico",
+    "sample": "tab-ivs",
+    "title": "IVs y EVs por generación",
+    "text": "En Gen 1–2 son DVs (0–15) y Exp. de stats (0–65535). El editor ajusta los rangos solo según el juego del save."
+  },
+  {
+    "category": "Edición",
+    "categoryId": "editing",
+    "icon": "pokemon",
+    "sample": "tab-sets",
+    "title": "Sets recomendados",
+    "text": "En el tab «Sets» verás sets de Smogon y Showdown para la especie, con habilidad, objeto, naturaleza y EVs."
+  },
+  {
+    "category": "Edición",
+    "categoryId": "editing",
+    "icon": "chispa",
+    "sample": "tab-special",
+    "title": "Mega, Z, Dynamax y Tera",
+    "text": "Las Mega Piedras, los Cristales Z y las demás mecánicas de cada juego se eligen en el tab «Especial», no en el campo de objeto."
+  },
+  {
+    "category": "Edición",
+    "categoryId": "editing",
+    "icon": "medalla",
+    "sample": "tab-ribbons",
+    "title": "Cintas por juego",
+    "text": "Solo se muestran las cintas que existen en la generación del save cargado."
+  },
+  {
+    "category": "Cajas y mochila",
+    "categoryId": "storage",
+    "icon": "limpiar",
+    "sample": "release",
+    "title": "Liberar un Pokémon",
+    "text": "El botón de liberar está sobre cada Pokémon, también los huevos. Un modal confirma y avisa si lleva un objeto: se pierde junto con él."
+  },
+  {
+    "category": "Cajas y mochila",
+    "categoryId": "storage",
+    "icon": "info",
+    "sample": "releaseblock",
+    "title": "El único Pokémon de la party",
+    "text": "La app no deja liberarlo, porque el juego necesita al menos uno en la party. Pasa otro Pokémon a la party y vuelve a intentarlo."
+  },
+  {
+    "category": "Cajas y mochila",
+    "categoryId": "storage",
+    "icon": "guardar",
+    "sample": "undo",
+    "title": "Deshacer tiene límites",
+    "text": "Hasta exportar puedes deshacer con «Deshacer» en el aviso o descartando las ediciones. No se puede si la party o la caja ya se llenaron, o si otro Pokémon ocupó ese hueco."
+  },
+  {
+    "category": "Cajas y mochila",
+    "categoryId": "storage",
+    "icon": "exportar",
+    "sample": "review",
+    "title": "Conservar uno al exportar",
+    "text": "En el modal de revisión puedes desmarcar una liberación para quedarte con ese Pokémon, pero solo en cajas desde Gen 3, con el hueco aún libre y sin ediciones sobre él. En la party y en las cajas de Gen 1–2 liberar reacomoda a los demás: ahí usa «Deshacer»."
+  },
+  {
+    "category": "Cajas y mochila",
+    "categoryId": "storage",
+    "icon": "mochila",
+    "sample": "bagtiles",
+    "title": "Categorías de la mochila",
+    "text": "La mochila se divide en categorías (objetos, medicinas, bolas, MT/MO…) y cuáles hay depende de la generación del save. Toca una para ver y editar sus objetos."
+  },
+  {
+    "category": "Cajas y mochila",
+    "categoryId": "storage",
+    "icon": "lapiz",
+    "sample": "bagrow",
+    "title": "Agregar o quitar objetos",
+    "text": "Cada categoría lista todos los objetos legales, los tengas o no. Sube la cantidad (o marca el objeto) para agregarlo y bájala a 0 para quitarlo."
+  },
+  {
+    "category": "Cajas y mochila",
+    "categoryId": "storage",
+    "icon": "chispa",
+    "sample": "bagmax",
+    "title": "Cantidad máxima",
+    "text": "«MAX» pone la cantidad en el tope de esa categoría en ese juego. Si escribes un número mayor, se ajusta al tope solo."
+  },
+  {
+    "category": "Cajas y mochila",
+    "categoryId": "storage",
+    "icon": "buscar",
+    "sample": "bagstore",
+    "title": "Buscar y cambiar a PC",
+    "text": "El buscador filtra por nombre o descripción dentro de la categoría. En las generaciones con almacén aparte, las flechas ◀ ▶ alternan entre Mochila y PC."
+  },
+  {
+    "category": "Legalidad",
+    "categoryId": "legality",
+    "icon": "balanza",
+    "sample": "steps",
+    "title": "Empieza por el primer paso",
+    "text": "Los pasos del tab «Legal» van ordenados por dependencia: encuentro, juego de origen y huevo primero. Corrige de arriba abajo y muchos errores de abajo desaparecen solos."
+  },
+  {
+    "category": "Legalidad",
+    "categoryId": "legality",
+    "icon": "advertencia",
+    "sample": "severity",
+    "title": "Rojo y ámbar no son lo mismo",
+    "text": "«Bloquea la legalidad» hace ilegal al Pokémon. «Sospechoso, revisar» es un aviso: puede ser un caso raro pero válido. Prioriza los rojos."
+  },
+  {
+    "category": "Legalidad",
+    "categoryId": "legality",
+    "icon": "lapiz",
+    "sample": "autofix",
+    "title": "Cuándo aparece «Corregir automáticamente»",
+    "text": "Solo cuando la app puede calcular el valor correcto (PID, ratio de captura, nivel u origen). En lo demás, toca el campo resaltado y sigue la sugerencia del paso."
+  },
+  {
+    "category": "Legalidad",
+    "categoryId": "legality",
+    "icon": "chispa",
+    "sample": "retry",
+    "title": "Algunos arreglos buscan al azar",
+    "text": "Arreglar el PID prueba combinaciones y a veces no encuentra nada. Si falla, pulsa «Reintentar»."
+  },
+  {
+    "category": "Legalidad",
+    "categoryId": "legality",
+    "icon": "grafico",
+    "sample": "ivbanner",
+    "title": "IVs editados que rompen el encuentro",
+    "text": "En algunos encuentros los IVs salen de una semilla del juego, y cambiarlos a mano los vuelve ilegales. Entonces aparece este aviso: úsalo para buscar IVs legales."
+  },
+  {
+    "category": "Legalidad",
+    "categoryId": "legality",
+    "icon": "limpiar",
+    "sample": "ivbuttons",
+    "title": "Si no hay combinación exacta",
+    "text": "La búsqueda te muestra la más cercana, cuántos puntos de IV difiere y qué más cambiaría (naturaleza, habilidad, género, brillo). Nada se aplica hasta que lo confirmes; con «Volver a los IVs originales» vuelves atrás."
+  },
+  {
+    "category": "Legalidad",
+    "categoryId": "legality",
+    "icon": "pokemon",
+    "sample": "recreate",
+    "title": "Origen inválido: recréalo",
+    "text": "«Recrear con un encuentro válido» ofrece orígenes legales. Se conservan especie, nivel, movimientos, apodo, objeto, entrenador e IVs; cambian lugar, ball y otros datos de captura. Verás qué cambia antes de aplicar."
+  },
+  {
+    "category": "Legalidad",
+    "categoryId": "legality",
+    "icon": "info",
+    "sample": "gomoves",
+    "title": "«Sin arreglo automático»",
+    "text": "Si ningún encuentro encaja con sus movimientos, cámbialos por legales («Ir a Moves») y revisa de nuevo: si aparece un encuentro compatible, el arreglo se ofrece solo."
+  },
+  {
+    "category": "Legalidad",
+    "categoryId": "legality",
+    "icon": "buscar",
+    "sample": "methods",
+    "title": "Movimientos legales con «Aprendibles»",
+    "text": "El tab «Aprendibles» muestra por qué método se aprende cada movimiento (nivel, MT, huevo, tutor, recordador) y desde qué nivel."
+  },
+  {
+    "category": "Legalidad",
+    "categoryId": "legality",
+    "icon": "tips",
+    "sample": "nickname",
+    "title": "Apodo, idioma y detalle técnico",
+    "text": "Si el apodo no coincide con ningún idioma válido, marca la casilla junto al campo de apodo. «Detalle técnico» muestra el mensaje original de PKHeX, útil para pedir ayuda."
+  }
+]
