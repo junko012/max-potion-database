@@ -1,5 +1,18 @@
 # Pokemon.db Schema Reference
 
+Every table of `pokemon.db`, with its columns, keys and meaning. Row counts are in the README
+(*Dataset Statistics*); the diagram is `ERD.png`. `python3 scripts/check_docs.py` fails if a table, a column
+or a `Metadata` key is missing here.
+
+| Group | Tables |
+| ----- | ------ |
+| Species | `Species`, `SpeciesTypes`, `SpeciesAbilities`, `SpeciesFlavorText` |
+| Moves | `Moves`, `Learnsets`, `MachineMoves` |
+| Items | `Items`, `ItemGameCodes`, `ItemDescriptions`, `ItemNames`, `HiddenItems` |
+| Evolution | `EvolutionChains`, `EvolutionConditions`, `FormEvolutionChains`, `FormEvolutionConditions` |
+| Availability | `SpeciesGameAvailability`, `FormGameAvailability` |
+| Reference | `Abilities`, `Games`, `TypeEffectiveness`, `Metadata` |
+
 ## Species
 
 Stores Pokémon species metadata and base stats.
@@ -23,6 +36,17 @@ Stores Pokémon species metadata and base stats.
 | BaseSpAttack   | INTEGER             |
 | BaseSpDefense  | INTEGER             |
 | BaseSpeed      | INTEGER             |
+| GenusEs        | TEXT                |
+| GenusEn        | TEXT                |
+| EggGroup1      | TEXT                |
+| EggGroup2      | TEXT                |
+| BaseSpecialGen1 | INTEGER            |
+
+Rows with `SpeciesId > 10000` are alternate / regional **forms** (325 rows). Forms have no genus or habitat of
+their own (`GenusEs`, `GenusEn`, `Habitat` are `NULL`: use the base species) and some have no egg group.
+`GenusEs` is `NULL` for 127 base species. `EggGroup2` is `NULL` when the species has a single egg group.
+`BaseSpecialGen1` is the single **Special** stat of Generation 1 (only the 151 Gen 1 species have it; in
+Gen 2+ Special is split into `BaseSpAttack` / `BaseSpDefense`).
 
 ---
 
@@ -58,6 +82,33 @@ Primary Key:
 
 ```text
 (SpeciesId, AbilityName)
+```
+
+---
+
+## SpeciesFlavorText
+
+Pokédex entries, one row per species, language and game version.
+
+| Column    | Type                                                          |
+| --------- | ------------------------------------------------------------- |
+| SpeciesId | INTEGER (→ `Species`, base species ≤ 1025)                    |
+| Lang      | TEXT (`en`, `es`)                                             |
+| Game      | TEXT (version slug: `red`, `crystal`, `alpha-sapphire`, `moon`, `lets-go-pikachu`, `shield`, ...) |
+| Text      | TEXT                                                          |
+
+Primary Key:
+
+```text
+(SpeciesId, Lang, Game)
+```
+
+Currently 20,314 rows over 35 game slugs: `en` covers 1,025 species and `es` 898. Forms have no entries (use the
+base species). The slugs are PokeAPI version names, not `Games.GameCode` values; an app maps its game to
+the slug (version pairs such as Red/Blue have one row per version). Source: PokeAPI species flavor text.
+
+```sql
+SELECT Text FROM SpeciesFlavorText WHERE SpeciesId = 25 AND Lang = 'en' AND Game = 'yellow';
 ```
 
 ---
@@ -222,6 +273,10 @@ Stores battle effectiveness multipliers.
 | DefenseType | TEXT |
 | Multiplier  | REAL |
 
+Only matchups that are **not neutral** are stored (`Multiplier` is `2.0`, `0.5` or `0.0`); a missing
+`(AttackType, DefenseType)` pair means `1.0`. Type names are lowercase (`fire`, `water`, ...), as in
+`SpeciesTypes.TypeName` and `Moves.TypeName`.
+
 Primary Key:
 
 ```text
@@ -358,7 +413,16 @@ Legends: Arceus, know Barb Barrage in Scarlet/Violet).
 ## FormEvolutionConditions
 
 Same structure and `ConditionType` vocabulary as `EvolutionConditions` (EAV, one row per condition),
-keyed by `FormEvolutionChains.EvolutionId`. Keys not present in `EvolutionConditions`:
+keyed by `FormEvolutionChains.EvolutionId`.
+
+| Column         | Type                              |
+| -------------- | --------------------------------- |
+| ConditionId    | INTEGER PRIMARY KEY AUTOINCREMENT |
+| EvolutionId    | INTEGER (→ `FormEvolutionChains`) |
+| ConditionType  | TEXT                              |
+| ConditionValue | TEXT                              |
+
+Index: `IX_FormEvolutionConditions_Evolution (EvolutionId)`. Keys not present in `EvolutionConditions`:
 `min_critical_hits`, `min_coins`, `nature` (`amped` / `low-key`), `min_move_count`.
 
 ---
@@ -403,11 +467,15 @@ WHERE  a.GameId = 12 AND a.Status = 'uncreatable';
 
 ## FormGameAvailability
 
-Forms that `PokemonService.BuildPokemon` cannot leave legal in a game (`SpeciesId` → `Species`, `GameId` →
-`Games`). Only `uncreatable` rows exist: `legendsza` (12), `legendsarceus` (11), `scarletviolet` (18),
-`swordshield` (20). The Form combo hides a listed form only if switching to it also breaks the Pokémon's
-origin (e.g. Zygarde 10%/50% and Ash-Greninja in Z-A). Fallback when the table is missing:
-`Assets/uncreatable_forms.json`.
+Per-game exceptions for forms (`SpeciesId` → `Species`, `GameId` → `Games`). 276 rows over 12 games, in two kinds:
+
+* `uncreatable` (234 rows: `legendsza` 70, `scarletviolet` 93, `legendsarceus` 38, `swordshield` 33): forms that
+  `PokemonService.BuildPokemon` cannot leave legal in that game. A listed form is hidden from the form selector only
+  if switching to it also breaks the Pokémon's origin (e.g. Zygarde 10%/50% and Ash-Greninja in Z-A).
+* `own_encounter` (42 rows, spread over Gen 4–9 games): the form is hidden from the form selector (changing to it
+  would break the origin) but has its own legal encounter, so it is offered when **creating** a Pokémon.
+
+Fallback when the table is missing: `Assets/uncreatable_forms.json`.
 
 | Column             | Type                              |
 | ------------------ | --------------------------------- |
@@ -415,7 +483,7 @@ origin (e.g. Zygarde 10%/50% and Ash-Greninja in Z-A). Fallback when the table i
 | SpeciesId          | INTEGER                           |
 | FormId             | INTEGER                           |
 | GameId             | INTEGER                           |
-| Status             | TEXT (`uncreatable`)              |
+| Status             | TEXT (`uncreatable`, `own_encounter`) |
 | Reason             | TEXT                              |
 
 Unique: `(SpeciesId, FormId, GameId)`. Index: `IX_FormGameAvailability_Game (GameId, Status)`.
@@ -425,30 +493,33 @@ Metadata keys: `FormAvailabilityVersion`, `FormAvailabilitySource`.
 
 ## Metadata
 
-Stores database metadata.
+Stores database version and provenance.
 
 | Column | Type             |
 | ------ | ---------------- |
 | Key    | TEXT PRIMARY KEY |
 | Value  | TEXT             |
 
-Suggested keys:
+Keys present in the current release:
 
-```text
-SchemaVersion
-DataVersion
-BuildDate
-BuilderVersion
-FormDataVersion
-SpeciesAvailabilityVersion
-SpeciesAvailabilitySource
-FormAvailabilityVersion
-FormAvailabilitySource
-ItemDescriptionsVersion
-ItemDescriptionsSource
-MachineMovesVersion
-MachineMovesSource
-```
+| Key | Meaning |
+| --- | ------- |
+| `SchemaVersion` | Schema version `S` (integer). The compatibility contract; see `VERSIONING.md`. Mirrored in `PRAGMA user_version`. |
+| `DataVersion` | Data version `AAAA.MM.R` (year, month, revision within the month). |
+| `BuildDate` | Date the file was stamped (`YYYY-MM-DD`). |
+| `Generator` | Tool that produced the original build (`Exxeguttor.DataBuilder.v06`). |
+| `MigrationDate`, `MigrationSource` | Date and origin of the first migration from the app's JSON assets. |
+| `MovesPopulated`, `AbilitiesPopulated`, `ItemsPopulated` | Row counts recorded at the first build (not updated afterwards; see the README for current counts). |
+| `FormDataVersion` | Version of the form data (forms as `Species` rows > 10000 and `FormEvolution*`). |
+| `SpeciesAvailabilityVersion`, `SpeciesAvailabilitySource` | `SpeciesGameAvailability` dataset. |
+| `FormAvailabilityVersion`, `FormAvailabilitySource` | `FormGameAvailability` dataset. |
+| `Gen1SpecialVersion`, `Gen1SpecialSource` | `Species.BaseSpecialGen1` (Gen 1 Special stat). |
+| `ItemDescriptionsVersion`, `ItemDescriptionsSource` | `ItemDescriptions` dataset. |
+| `MachineMovesVersion`, `MachineMovesSource` | `MachineMoves` dataset. |
+| `ItemNamesVersion`, `ItemNamesSource` | `ItemNames` dataset. |
+| `HiddenItemsVersion` | `HiddenItems` dataset. |
+
+Each dataset added after the first build carries its own `<Dataset>Version` / `<Dataset>Source` pair.
 
 ---
 
@@ -457,7 +528,8 @@ MachineMovesSource
 ```text
 Species
 ├── SpeciesTypes
-├── SpeciesAbilities
+├── SpeciesAbilities       (AbilityName -> Abilities.Name, by name)
+├── SpeciesFlavorText
 ├── Learnsets
 └── EvolutionChains
 
@@ -479,7 +551,13 @@ FormGameAvailability      (SpeciesId -> Species, GameId -> Games)
 Items
 ├── ItemGameCodes         (ItemId -> Items, GameId -> Games)
 ├── ItemDescriptions      (ItemId -> Items)
+├── ItemNames             (ItemId -> Items)
+├── HiddenItems           (ItemId -> Items, GameId -> Games)
 └── MachineMoves          (ItemId -> Items, GameId -> Games; MoveId = PKHeX move id)
+
+TypeEffectiveness         (type names are shared by SpeciesTypes.TypeName and Moves.TypeName, by name)
+Abilities                 (referenced by SpeciesAbilities.AbilityName, by name)
+Metadata                  (standalone)
 ```
 
 ---
@@ -487,8 +565,11 @@ Items
 # Schema Version
 
 ```text
-SchemaVersion: 1
+SchemaVersion: 1   (full release version: see VERSIONING.md, e.g. 1.2026.11.0)
 ```
+
+Within one schema version the database only grows (new rows, tables or nullable columns); a change that can break
+existing queries raises `SchemaVersion`.
 
 # Database Engine
 

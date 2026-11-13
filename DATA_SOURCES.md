@@ -8,7 +8,8 @@ The database is generated from publicly available Pokémon information.
 
 Used for:
 
-* Species
+* Species (stats, genus, egg groups, habitat, colour, shape)
+* Species flavor text (Pokédex entries, English and Spanish)
 * Moves
 * Abilities
 * Items
@@ -22,9 +23,21 @@ https://pokeapi.co
 
 ## PKHeX Research
 
-Used for validation and interoperability with Pokémon save editing ecosystems.
+Used for validation and interoperability with Pokémon save editing ecosystems, and as the source of:
+
+* game-by-game species and form availability (`SpeciesGameAvailability`, `FormGameAvailability`), checked with
+  PKHeX.Core's legality analysis
+* form data and form evolution trees (`FormEvolutionChains`, `FormEvolutionConditions`)
+* the Generation 1 Special stat (`Species.BaseSpecialGen1`)
+* item ids per game and pouch (`ItemGameCodes`) and the move ids used by `MachineMoves`
 
 https://github.com/kwsch/PKHeX
+
+## Item Names Research
+
+`ItemNames` holds official names for Legends: Z-A items that PKHeX.Core does not name. They were taken from community
+wikis (Bulbapedia, WikiDex, Poképédia) and are stored with their source URL and a confidence level (`high` when two
+sources agree). They are not confirmed against in-game captures.
 
 ## Item Description Research
 

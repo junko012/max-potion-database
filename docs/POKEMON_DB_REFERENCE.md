@@ -191,11 +191,10 @@ SchemaVersion
 DataVersion
 BuildDate
 Generator
-ItemDescriptionsVersion
-MachineMovesVersion
+...and one <Dataset>Version / <Dataset>Source pair per dataset
 ```
 
-Per-feature hotfixes add their own `<Feature>Version` / `<Feature>Source` keys (see `docs/SCHEMA_REFERENCE.md`).
+Per-feature hotfixes add their own `<Feature>Version` / `<Feature>Source` keys; the full list is in `docs/SCHEMA_REFERENCE.md`.
 
 ---
 
@@ -281,19 +280,14 @@ Applications should load it independently.
 
 # Versioning
 
-Version information should be stored in:
+Release version `S.AAAA.MM.R` (for example `1.2026.11.0`, tag `db-v1.2026.11.0`):
 
 ```text
-Metadata
+S          schema version (Metadata.SchemaVersion, PRAGMA user_version)
+AAAA.MM.R  data version (Metadata.DataVersion)
 ```
 
-Recommended keys:
-
-```text
-SchemaVersion
-DataVersion
-BuilderVersion
-```
+The schema number is the compatibility contract: within a schema the database only grows. See `VERSIONING.md`.
 
 ---
 
@@ -315,16 +309,31 @@ Compatible with:
 
 # Release Statistics
 
-Version 1.0.0
+Row counts of the current release (kept in sync by `scripts/check_docs.py --write-stats`).
 
+<!-- STATS:START -->
 ```text
-Species                1350
-Moves                   937
-Abilities               371
-Items                  1200
-Learnsets           681289
-Evolution Chains        484
-Evolution Conditions   3294
-Type Effectiveness      128
+Abilities                      371
+EvolutionChains                484
+EvolutionConditions          3,294
+FormEvolutionChains             54
+FormEvolutionConditions        340
+FormGameAvailability           276
+Games                           24
+HiddenItems                     12
+ItemDescriptions            12,738
+ItemGameCodes                9,801
+ItemNames                      585
+Items                        2,515
+Learnsets                  681,289
+MachineMoves                 2,026
+Metadata                        23
+Moves                          937
+Species                      1,350
+SpeciesAbilities             2,926
+SpeciesFlavorText           20,314
+SpeciesGameAvailability      4,507
+SpeciesTypes                 2,115
+TypeEffectiveness              120
 ```
-
+<!-- STATS:END -->

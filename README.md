@@ -52,16 +52,35 @@ pokemon.db   (~52 MB, ~16 MB compressed)
 
 ## Dataset Statistics
 
-| Table                | Records |
-| -------------------- | ------: |
-| Species              |    1350 |
-| Moves                |     937 |
-| Abilities            |     371 |
-| Items                |    1200 |
-| Learnsets            |  681289 |
-| Evolution Chains     |     484 |
-| Evolution Conditions |    3294 |
-| Type Effectiveness   |     128 |
+Row counts of every table in `pokemon.db` (kept in sync by `scripts/check_docs.py --write-stats`).
+
+<!-- STATS:START -->
+| Table | Records | Purpose |
+| ----- | ------: | ------- |
+| `Abilities` | 371 | Ability names and descriptions |
+| `EvolutionChains` | 484 | Species-to-species evolution edges |
+| `EvolutionConditions` | 3,294 | Requirements of each evolution (level, item, trade...) |
+| `FormEvolutionChains` | 54 | Evolution edges that involve regional / alternate forms |
+| `FormEvolutionConditions` | 340 | Requirements of each form evolution |
+| `FormGameAvailability` | 276 | Forms that cannot be built / have their own encounter |
+| `Games` | 24 | Game identifiers (one per version pair) |
+| `HiddenItems` | 12 | Items the bag must not offer in a game |
+| `ItemDescriptions` | 12,738 | Item descriptions in 9 languages, with source |
+| `ItemGameCodes` | 9,801 | Which items exist in each game, save id and pouch |
+| `ItemNames` | 585 | Official item names PKHeX.Core does not provide |
+| `Items` | 2,515 | Item metadata (category, cost, fling) |
+| `Learnsets` | 681,289 | Moves each species can learn, per game and method |
+| `MachineMoves` | 2,026 | Move taught by each TM / TR / HM per game |
+| `Metadata` | 23 | Database version and per-dataset provenance |
+| `Moves` | 937 | Move metadata (type, power, accuracy, PP, effect) |
+| `Species` | 1,350 | Species and forms: base stats, growth, genus, egg groups |
+| `SpeciesAbilities` | 2,926 | Normal and hidden abilities per species |
+| `SpeciesFlavorText` | 20,314 | Pokédex entries per species, language and game |
+| `SpeciesGameAvailability` | 4,507 | Which species can be created in each game |
+| `SpeciesTypes` | 2,115 | Typing of each species (slot 1 / 2) |
+| `TypeEffectiveness` | 120 | Attack / defense type multipliers |
+| **Total (22 tables)** | **746,101** | |
+<!-- STATS:END -->
 
 ---
 
@@ -78,7 +97,9 @@ max-potion-database
 │
 ├── scripts
 │   ├── set_version.py
-│   └── validate_db.py
+│   ├── validate_db.py
+│   ├── check_docs.py
+│   └── gen_erd.py
 │
 ├── docs
 │   ├── SCHEMA_REFERENCE.md
@@ -101,6 +122,8 @@ max-potion-database
 
 ### Species
 
+Table: `Species`
+
 Stores Pokémon species metadata and base stats.
 
 Includes:
@@ -111,10 +134,15 @@ Includes:
 * Base experience
 * Gender rate
 * Base battle statistics
+* Genus (English / Spanish), habitat, colour, shape and egg groups
+* The single Gen 1 Special stat (`BaseSpecialGen1`)
+* Alternate and regional forms as extra rows (`SpeciesId > 10000`)
 
 ---
 
 ### Species Types
+
+Table: `SpeciesTypes`
 
 Stores primary and secondary typings.
 
@@ -130,11 +158,15 @@ Bulbasaur
 
 ### Species Abilities
 
+Table: `SpeciesAbilities`
+
 Stores normal and hidden abilities.
 
 ---
 
 ### Moves
+
+Table: `Moves`
 
 Stores move metadata.
 
@@ -152,11 +184,15 @@ Includes:
 
 ### Abilities
 
+Table: `Abilities`
+
 Stores ability metadata and descriptions.
 
 ---
 
 ### Items
+
+Table: `Items`
 
 Stores item metadata.
 
@@ -171,17 +207,23 @@ Includes:
 
 ### ItemDescriptions
 
+Table: `ItemDescriptions`
+
 Item descriptions per language (9 languages) with source and verification status.
 
 ---
 
 ### MachineMoves
 
+Table: `MachineMoves`
+
 The move taught by each TM/HM/TR in each game.
 
 ---
 
 ### Type Effectiveness
+
+Table: `TypeEffectiveness`
 
 Stores battle effectiveness multipliers.
 
@@ -196,6 +238,8 @@ Water → Fire = 2.0
 ---
 
 ### Games
+
+Table: `Games`
 
 Stores supported game identifiers.
 
@@ -214,6 +258,8 @@ scarletviolet
 
 ### Learnsets
 
+Table: `Learnsets`
+
 Stores move acquisition information per game.
 
 Supports:
@@ -225,15 +271,13 @@ Supports:
 * Event moves
 * Evolution moves
 
-Current records:
-
-```text
-681,289
-```
+Row count: see [Dataset Statistics](#dataset-statistics).
 
 ---
 
 ### Evolution Chains
+
+Table: `EvolutionChains`
 
 Stores evolutionary relationships.
 
@@ -249,6 +293,8 @@ Bulbasaur
 
 ### Evolution Conditions
 
+Table: `EvolutionConditions`
+
 Stores evolution requirements.
 
 Examples:
@@ -263,6 +309,78 @@ Known Move
 Location
 Weather
 ```
+
+---
+
+### Form Evolution Chains and Conditions
+
+Tables: `FormEvolutionChains`, `FormEvolutionConditions`
+
+Evolution edges that involve a **form** (Alolan, Galarian, Hisuian and Paldean forms, Burmy cloaks,
+Meowstic, ...). `EvolutionChains` keeps one edge per species and cannot tell "Slowbro of Galar" from
+"Slowbro"; these tables can. Same structure and condition vocabulary as the species tables.
+
+---
+
+### Species Flavor Text
+
+Table: `SpeciesFlavorText`
+
+Pokédex entries, one row per species, language and game version (English and Spanish). Forms have no
+entries of their own: use the base species.
+
+---
+
+### Species Game Availability
+
+Table: `SpeciesGameAvailability`
+
+Which species can be created in each game that restricts its Pokédex (Let's Go, Sword/Shield,
+Legends: Arceus, Scarlet/Violet, Legends: Z-A). Each row has a `Status`: `native`, `present_illegal`,
+`transfer_only`, `dlc` or `uncreatable`.
+
+---
+
+### Form Game Availability
+
+Table: `FormGameAvailability`
+
+Per-game exceptions for forms: `uncreatable` (no legal build) and `own_encounter` (hidden from the form
+selector but obtainable through its own legal encounter).
+
+---
+
+### Item Game Codes
+
+Table: `ItemGameCodes`
+
+Which items exist in each game, their raw id inside the save file and the bag pouch they belong to.
+
+---
+
+### Item Names
+
+Table: `ItemNames`
+
+Official item names in 9 languages for objects that PKHeX.Core does not name (Legends: Z-A), with source,
+source URL and a confidence level.
+
+---
+
+### Hidden Items
+
+Table: `HiddenItems`
+
+Items an editor should not offer in a given game (for example TMs that exist in the item table but teach no move).
+
+---
+
+### Metadata
+
+Table: `Metadata`
+
+Database version (`SchemaVersion`, `DataVersion`, `BuildDate`, `Generator`) and one `<Dataset>Version` /
+`<Dataset>Source` pair per dataset that was added or revised after the first build.
 
 ---
 
@@ -320,10 +438,13 @@ docs/
 
 Including:
 
-* SCHEMA_REFERENCE.md
+* SCHEMA_REFERENCE.md (every table and column)
 * POKEMON_DB_REFERENCE.md
 * DATA_SOURCES.md
-* ERD.png
+* ERD.png (all tables; regenerate with `python3 scripts/gen_erd.py`)
+
+Run `python3 scripts/check_docs.py` to verify that the documentation covers every table, column and
+Metadata key of the database.
 
 ---
 

@@ -14,3 +14,5 @@ jobs:
         with: { python-version: "3.12" }
       - name: Validate pokemon.db
         run: python scripts/validate_db.py database/pokemon.db
+      - name: Docs match the database
+        run: python scripts/check_docs.py database/pokemon.db

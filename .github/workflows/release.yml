@@ -18,6 +18,8 @@ jobs:
         with: { python-version: "3.12" }
       - name: Validate (and match tag)
         run: python scripts/validate_db.py database/pokemon.db --tag "${GITHUB_REF_NAME}"
+      - name: Docs match the database
+        run: python scripts/check_docs.py database/pokemon.db
       - name: Package
         run: |
           mkdir dist

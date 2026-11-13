@@ -1,5 +1,18 @@
 # Changelog
 
+## Unreleased (documentation and versioning)
+
+### Documentation
+
+* README, `SCHEMA_REFERENCE.md`, `POKEMON_DB_REFERENCE.md` and `DATA_SOURCES.md` now cover all 22 tables. Previously undocumented or incomplete: `SpeciesFlavorText` (no documentation at all), `FormEvolutionConditions` (columns), `Species` (`GenusEs`, `GenusEn`, `EggGroup1`, `EggGroup2`, `BaseSpecialGen1`), `FormGameAvailability` (the `own_encounter` status) and the full list of `Metadata` keys
+* Statistics tables corrected (they listed 8 tables with outdated counts, e.g. 1,200 items vs 2,515 and 128 type-effectiveness rows vs 120)
+* `ERD.png` regenerated from the real schema (all 22 tables, row counts, logical relationships); source in `scripts/gen_erd.py`
+* New `scripts/check_docs.py` (run by CI) fails when a table, column or `Metadata` key is missing from the docs or the statistics are stale
+
+### Versioning
+
+* Release versions are now `S.AAAA.MM.R` (tag `db-v...`); `Metadata.SchemaVersion` / `DataVersion` and `PRAGMA user_version` must agree (`scripts/set_version.py`, `scripts/validate_db.py`). See `VERSIONING.md` and `RELEASING.md`
+
 ## Unreleased (HiddenItems)
 
 ### Database (items the bag should not offer)
