@@ -1,10 +1,10 @@
-# Exxeguttor Pokemon Database
+# Max Potion Database
 
-A portable SQLite Pokémon database designed for the Exxeguttor ecosystem and third-party applications.
+A portable SQLite Pokémon database built for [Max Potion](https://github.com/junko012/max-potion), a Pokémon save file editor, and open to any third-party application.
 
 ## Overview
 
-Exxeguttor Pokemon Database is a consolidated Pokémon knowledge base generated from multiple public data sources and normalized into a single SQLite database.
+Max Potion Database is a consolidated Pokémon knowledge base generated from multiple public data sources and normalized into a single SQLite database.
 
 The project was created to provide a fast, offline, language-independent data layer for:
 
@@ -28,22 +28,24 @@ and can be consumed from any platform that supports SQLite.
 
 ## Release Information
 
-Current Release:
+Each release is tagged `db-vS.AAAA.MM.R` (for example `db-v1.2026.11.0`) and publishes
+`pokemon.db`, `pokemon.db.gz` and `pokemon.db.sha256` in the
+[Releases](https://github.com/junko012/max-potion-database/releases) page.
 
-```text
-v1.0.0
-```
+| Part | Meaning |
+|------|---------|
+| `S` | **Schema** version. Only changes when existing queries could break. |
+| `AAAA.MM.R` | Data version: year, month and revision within the month. |
+
+Within the same schema, updates are additive only (new rows, tables or nullable columns), so an
+application written for schema `S` keeps working with every later release of that schema.
+The version is stored in the `Metadata` table (`SchemaVersion`, `DataVersion`) and in `PRAGMA user_version`.
+See [VERSIONING.md](VERSIONING.md) for the full contract and [RELEASING.md](RELEASING.md) for the release steps.
 
 Database File:
 
 ```text
-pokemon.db
-```
-
-Database Size:
-
-```text
-~52 MB
+pokemon.db   (~52 MB, ~16 MB compressed)
 ```
 
 ---
@@ -66,13 +68,17 @@ Database Size:
 ## Repository Structure
 
 ```text
-exxeguttor-pokemon-database
+max-potion-database
 │
 ├── database
 │   └── pokemon.db
 │
 ├── resources
 │   └── movesets_all_combined.json
+│
+├── scripts
+│   ├── set_version.py
+│   └── validate_db.py
 │
 ├── docs
 │   ├── SCHEMA_REFERENCE.md
@@ -83,7 +89,9 @@ exxeguttor-pokemon-database
 ├── CHANGELOG.md
 ├── CONTRIBUTING.md
 ├── ROADMAP.md
-├── LICENSE
+├── VERSIONING.md
+├── RELEASING.md
+├── LICENCE
 └── README.md
 ```
 
@@ -340,7 +348,7 @@ Pokémon and all related names, characters, species, moves, abilities,
 items, games, trademarks, and intellectual property are owned by Nintendo,
 Game Freak, and The Pokémon Company.
 
-Exxeguttor Pokemon Database is an independent project and is not affiliated
+Max Potion Database is an independent project and is not affiliated
 with, endorsed by, or sponsored by Nintendo, Game Freak, The Pokémon Company,
 or the PKHeX project.
 
@@ -350,5 +358,5 @@ or the PKHeX project.
 
 MIT License
 
-See the LICENSE file for details.
+See the LICENCE file for details.
 
