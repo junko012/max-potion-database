@@ -1,0 +1,5 @@
+
+# SQLite (restos de abrir la DB)
+*.db-wal
+*.db-shm
+*.db-journal
