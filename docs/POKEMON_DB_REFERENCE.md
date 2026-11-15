@@ -318,7 +318,7 @@ EvolutionChains                484
 EvolutionConditions          3,294
 FormEvolutionChains             54
 FormEvolutionConditions        340
-FormGameAvailability           276
+FormGameAvailability           731
 Games                           24
 HiddenItems                     12
 ItemDescriptions            12,738

@@ -62,7 +62,7 @@ Row counts of every table in `pokemon.db` (kept in sync by `scripts/check_docs.p
 | `EvolutionConditions` | 3,294 | Requirements of each evolution (level, item, trade...) |
 | `FormEvolutionChains` | 54 | Evolution edges that involve regional / alternate forms |
 | `FormEvolutionConditions` | 340 | Requirements of each form evolution |
-| `FormGameAvailability` | 276 | Forms that cannot be built / have their own encounter |
+| `FormGameAvailability` | 731 | Forms that cannot be built / have their own encounter |
 | `Games` | 24 | Game identifiers (one per version pair) |
 | `HiddenItems` | 12 | Items the bag must not offer in a game |
 | `ItemDescriptions` | 12,738 | Item descriptions in 9 languages, with source |
@@ -79,7 +79,7 @@ Row counts of every table in `pokemon.db` (kept in sync by `scripts/check_docs.p
 | `SpeciesGameAvailability` | 4,507 | Which species can be created in each game |
 | `SpeciesTypes` | 2,115 | Typing of each species (slot 1 / 2) |
 | `TypeEffectiveness` | 120 | Attack / defense type multipliers |
-| **Total (22 tables)** | **746,101** | |
+| **Total (22 tables)** | **746,556** | |
 <!-- STATS:END -->
 
 ---
